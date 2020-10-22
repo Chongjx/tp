@@ -3,6 +3,8 @@ package seedu.duke.command;
 import seedu.duke.data.timetable.Event;
 import seedu.duke.ui.Formatter;
 
+import java.util.ArrayList;
+
 import static seedu.duke.util.PrefixSyntax.PREFIX_DELIMITER;
 import static seedu.duke.util.PrefixSyntax.PREFIX_INDEX;
 
@@ -17,8 +19,8 @@ public class DeleteEventCommand extends Command {
     public static final String COMMAND_USAGE = COMMAND_WORD + ": Deletes an event. Parameters: "
             + PREFIX_DELIMITER + PREFIX_INDEX + " INDEX";
 
-    public static final String COMMAND_SUCCESSFUL_MESSAGE = "Event deleted:" + Formatter.LS;
-    public static final String COMMAND_UNSUCCESSFUL_MESSAGE = "Event failed to delete: " + Formatter.LS;
+    public static final String COMMAND_SUCCESSFUL_MESSAGE = "Event deleted";
+    public static final String COMMAND_UNSUCCESSFUL_MESSAGE = "Event failed to delete";
     public static final String INDEX_OUT_OF_RANGE_MESSAGE = "The index you specified is out of range. "
             + "Please specify the index that is indicated when you print the event list";
 
@@ -35,11 +37,15 @@ public class DeleteEventCommand extends Command {
 
     @Override
     public String execute() {
+        ArrayList<String> returnMessages;
         if (index < 0 || index >= timetable.getEvents().size()) {
-            return COMMAND_UNSUCCESSFUL_MESSAGE + INDEX_OUT_OF_RANGE_MESSAGE;
+            returnMessages = new ArrayList<>();
+            returnMessages.add(COMMAND_UNSUCCESSFUL_MESSAGE);
+            returnMessages.add(INDEX_OUT_OF_RANGE_MESSAGE);
+            return Formatter.formatString(returnMessages, true);
         }
         Event event = timetable.getEvent(index);
         timetable.deleteEvent(index);
-        return COMMAND_SUCCESSFUL_MESSAGE + event.toString();
+        return Formatter.formatEventString(COMMAND_SUCCESSFUL_MESSAGE, event);
     }
 }

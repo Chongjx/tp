@@ -175,7 +175,7 @@ public class Timetable {
     }
 
     /**
-     * Provides a method to get all events, including re-occuring events in an arraylist in a specified period.
+     * Provides a method to get all events, including re-occurring events in an arraylist in a specified period.
      *
      * @param startDate Start of time period.
      * @param endDate End of time period.

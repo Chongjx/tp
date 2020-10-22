@@ -6,6 +6,7 @@ import seedu.duke.data.notebook.Note;
 import seedu.duke.data.notebook.Notebook;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.fail;
 
@@ -14,11 +15,13 @@ class StorageManagerTest {
     @Test
     void saveNotebook() throws SystemException {
         Notebook notes = new Notebook();
-        String content = "Hello this is a test note\n"
-                + "With a few lines\n"
-                + "\n"
-                + "\n"
-                + "This is the end of the note\n";
+        ArrayList<String> content = new ArrayList<>();
+        content.add("Hello this is a test note");
+        content.add("With a few lines");
+        content.add("");
+        content.add("");
+        content.add("This is the end of the note");
+
         for (int i = 0; i < 10; i++) {
             String title = "testNote_" + i;
             Boolean isPinned = false;
@@ -41,12 +44,15 @@ class StorageManagerTest {
 
     @Test
     void saveNoteContent() {
-        String content = "Hello this is a test note\n"
-                        + "With a few lines\n"
-                        + "\n"
-                        + "\n"
-                        + "This is the end of the note\n";
+        ArrayList<String> content = new ArrayList<>();
+        content.add("Hello this is a test note");
+        content.add("With a few lines");
+        content.add("");
+        content.add("");
+        content.add("This is the end of the note");
+
         Note note = new Note("TestNote", content, false, false);
+      
         try {
             StorageManager.saveNoteContent(note);
         } catch (IOException e) {

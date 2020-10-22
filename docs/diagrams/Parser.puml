@@ -1,21 +1,21 @@
 @startuml
-Notus -> Parser: ParseCommand()
+NotUS -> Parser: ParseCommand()
 
 alt add-n
 Parser -> Parser: prepareAddNote()
 Parser -> Command: <<new>>
 Parser <-- Command
-Notus <-- Parser
+NotUS <-- Parser
 else delete-n
 Parser -> Parser: prepareDeleteNote()
 Parser -> Command: <<new>>
 Parser <-- Command
-Notus <-- Parser
+NotUS <-- Parser
 else edit-n
 Parser -> Parser: prepareEditNote()
 Parser -> Command: <<new>>
 Parser <-- Command
-Notus <-- Parser
+NotUS <-- Parser
 end
 
 @enduml

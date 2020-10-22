@@ -14,6 +14,10 @@ public class RemindCommand extends Command {
 
     public static final String COMMAND_USAGE = COMMAND_WORD + ": Shows the reminders for today.";
 
+    private static final String COMMAND_SUCCESSFUL_MESSAGE = "Here are the reminders for today!";
+    private static final String COMMAND_UNSUCCESSFUL_MESSAGE = "No reminders today!";
+
+
     /**
      * Default constructor of RemindEvent. No arguments are expected as we are only looking at reminders today.
      */
@@ -24,15 +28,10 @@ public class RemindCommand extends Command {
     @Override
     public String execute() {
         ArrayList<Reminder> reminders = timetable.getReminders();
-        StringBuilder result = new StringBuilder("Reminders:" + Formatter.LS);
         if (reminders.size() == 0) {
-            result.append("No reminders today!");
+            return Formatter.formatString(COMMAND_UNSUCCESSFUL_MESSAGE);
+        } else {
+            return Formatter.formatReminders(COMMAND_SUCCESSFUL_MESSAGE, reminders);
         }
-        String lineSep = "";
-        for (Reminder reminder : reminders) {
-            result.append(lineSep).append(reminder.toString());
-            lineSep = Formatter.LS;
-        }
-        return result.toString();
     }
 }

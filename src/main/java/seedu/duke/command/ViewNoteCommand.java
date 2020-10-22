@@ -17,7 +17,8 @@ public class ViewNoteCommand extends Command {
     public static final String COMMAND_USAGE = COMMAND_WORD + ": Views a note. Parameters: "
             + "[" + PREFIX_DELIMITER + PREFIX_INDEX + " INDEX] "
             + "[" + PREFIX_DELIMITER + PREFIX_TITLE + " TITLE]";
-    
+
+    public static final String COMMAND_SUCCESSFUL_MESSAGE = "Here's the note you're looking for: ";
     public static final String COMMAND_UNSUCCESSFUL_MESSAGE = "This note does not exists in the notebook";
 
     private int index;
@@ -47,7 +48,7 @@ public class ViewNoteCommand extends Command {
 
     @Override
     public String execute() {
-        Note note = new Note("", "", false, false);
+        Note note = new Note("", null, false, false);
         boolean noteExists = false;
         if (isViewByIndex) {
             try {
@@ -71,7 +72,11 @@ public class ViewNoteCommand extends Command {
         // format output string
         String stringToPrint = note.getTitle() + " " + note.getTagsName();
 
-        stringToPrint += Formatter.LS + note.getContent();
+        for (String line : note.getContent()) {
+            stringToPrint += Formatter.LS + line;
+        }
         return stringToPrint;
+        //to be used with formatter
+        //return Formatter.formatNote(COMMAND_SUCCESSFUL_MESSAGE + note.getTitle(), note);
     }
 }

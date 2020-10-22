@@ -225,7 +225,7 @@ public class Parser {
     private Command prepareAddNote(String userMessage) throws SystemException {
         Note note;
         String title = "";
-        String content = "";
+        ArrayList<String> content = new ArrayList<>();
         boolean isPinned = false;
         boolean isArchived = false;
         ArrayList<Tag> tags = new ArrayList<>();
@@ -396,38 +396,35 @@ public class Parser {
      * @return A string of converted content input.
      * @throws StringIndexOutOfBoundsException if an error occurs.
      */
-    public static String inputContent() {
+    public static ArrayList<String> inputContent() {
         boolean isInputSuccess = false;
-        StringBuilder commandInput;
+        ArrayList<String> inputString;
 
         do {
             Scanner input = new Scanner(System.in);
-            commandInput = new StringBuilder();
+            inputString = new ArrayList<>();
 
             System.out.println("Enter Note:");
+            System.out.println("Type /del to delete your previous line");
+            System.out.println("Type /end on a new line to end your note input");
             try {
                 // Type note
                 do {
-                    commandInput.append(input.nextLine());
+                    inputString.add(input.nextLine());
 
-                    // Add next line when user press enter
-                    if (!commandInput.toString().equalsIgnoreCase(PREFIX_DELIMITER + PREFIX_END)) {
-                        commandInput.append(STRING_NEW_LINE);
+                    // "/del" Delete previous line if there user makes a typo
+                    if (inputString.get(inputString.size() - 1)
+                            .equalsIgnoreCase(PREFIX_DELIMITER + PREFIX_DELETE_LINE)) {
+                        inputString.remove(inputString.size() - 1);
+                        inputString.remove(inputString.size() - 1);
                     }
-
-                    // "/del" Delete previous line if there user makes mistakes
-                    if (commandInput.toString().contains(PREFIX_DELIMITER + PREFIX_DELETE_LINE)) {
-                        deleteLine(commandInput, STRING_NEW_LINE + PREFIX_DELIMITER
-                                + PREFIX_DELETE_LINE + STRING_NEW_LINE, 0);
-                        deleteLine(commandInput, STRING_NEW_LINE, 1);
-                    }
-                } while (!commandInput.toString().contains(PREFIX_DELIMITER + PREFIX_END)); // "/end" to end input note
+                } while (!inputString.get(inputString.size() - 1)
+                        .equalsIgnoreCase(PREFIX_DELIMITER + PREFIX_END)); // "/end" to end input note
 
                 // Delete "/end" command when user ends the edit
-                deleteLine(commandInput, STRING_NEW_LINE + PREFIX_DELIMITER
-                        + PREFIX_END + STRING_NEW_LINE, 0);
+                inputString.remove(inputString.size() - 1);
 
-                if (!commandInput.toString().isBlank()) {
+                if (inputString.size() != 0) {
                     isInputSuccess = true;
                 } else {
                     System.out.println(SystemException.ExceptionType.EXCEPTION_CONTENT_MISSING);
@@ -437,7 +434,7 @@ public class Parser {
             }
         } while (!isInputSuccess);
 
-        return commandInput.toString();
+        return inputString;
     }
 
     /**

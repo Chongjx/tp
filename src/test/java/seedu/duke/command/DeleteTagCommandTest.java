@@ -25,6 +25,7 @@ class DeleteTagCommandTest {
 
     private ArrayList<Tag> tags;
     private TagManager tagManager;
+    private ArrayList<String> content;
 
     private Note defaultNote;
 
@@ -39,7 +40,10 @@ class DeleteTagCommandTest {
         tags = new ArrayList<>();
         tagManager = new TagManager();
 
-        defaultNote = new Note("Default", "Default", false, false);
+        content = new ArrayList<>();
+        content.add("Default");
+
+        defaultNote = new Note("Default", content, false, false);
     }
 
     @Test

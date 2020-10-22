@@ -61,7 +61,10 @@ The architecture design is given in the diagram above. The main components of No
  and then attempts to load any existing saved files into the application. Subsequently, it will accept and interpret
 the user input and execute the commands accordingly. The diagram below depicts the main flow of the application.
 
-{insert Notus.puml here}
+<p align="center">
+  <img alt="NotUS" src="diagrams/out/Notus.png" />
+  <br><em>Figure 2</em>
+</p>
 
 <br>
 
@@ -71,9 +74,12 @@ the user input and execute the commands accordingly. The diagram below depicts t
 1. Interprets the type of command and splits the message to identify all the parameters provided.
 1. Creates and returns the Command class respectively.
  
- {insert Parser.puml here}
+<p align="center">
+  <img alt="Parser" src="diagrams/out/Parser.png" />
+  <br><em>Figure 3</em>
+</p>
 
-**Command** classes
+**Command**
 
 <br>
 

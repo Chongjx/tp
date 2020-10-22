@@ -1,20 +1,20 @@
 @startuml
-Notus -> StorageManager: Load saved file
-Notus <-- StorageManager: Load result
+NotUS -> StorageManager: Load saved file
+NotUS <-- StorageManager: Load result
 
 loop !Exit Command
-Notus -> InterfaceManager: getUserCommandInput()
-Notus <-- InterfaceManager: userInput
+NotUS -> InterfaceManager: getUserCommandInput()
+NotUS <-- InterfaceManager: userInput
 
-Notus -> Parser: parseCommand()
-Notus <-- Parser: new Command
+NotUS -> Parser: parseCommand()
+NotUS <-- Parser: new Command
 
-Notus -> Command: setData()
-Notus <-- Command
-Notus -> Command: execute()
-Notus <-- Command: execute result
-Notus -> InterfaceManager: prints()
-Notus <-- InterfaceManager
+NotUS -> Command: setData()
+NotUS <-- Command
+NotUS -> Command: execute()
+NotUS <-- Command: execute result
+NotUS -> InterfaceManager: prints()
+NotUS <-- InterfaceManager
 
 end
 

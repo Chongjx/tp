@@ -3,6 +3,8 @@ package seedu.duke.command;
 import seedu.duke.data.notebook.Note;
 import seedu.duke.ui.Formatter;
 
+import java.util.ArrayList;
+
 import static seedu.duke.util.Parser.inputContent;
 import static seedu.duke.util.PrefixSyntax.PREFIX_DELIMITER;
 import static seedu.duke.util.PrefixSyntax.PREFIX_TITLE;
@@ -38,7 +40,7 @@ public class AddNoteCommand extends Command {
 
     @Override
     public String execute() {
-        String content = note.getContent();
+        ArrayList<String> content = note.getContent();
 
         // Search for duplicates
         if (notebook.getNote(note.getTitle())) {
@@ -46,7 +48,7 @@ public class AddNoteCommand extends Command {
         }
 
         // Get Content
-        if (content.isBlank()) {
+        if (content.isEmpty()) {
             content = inputContent();
         }
 

@@ -54,6 +54,7 @@ public class DeleteNoteCommand extends Command {
         try {
             // If there is no title, delete note by index. Else delete by title.
             if (title.isBlank()) {
+                assert index >= 0;
                 deletedTitle = notebook.getNote(index).getTitle();
                 isDeleted = notebook.deleteNote(index);
             } else {

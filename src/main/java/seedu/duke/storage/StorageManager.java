@@ -80,7 +80,7 @@ public class StorageManager {
         String path = FOLDER_DIR + NOTES_DIR + "/" + note.getTitle() + ".txt";
         createFile(path);
         FileWriter fwAppend = new FileWriter(path, true);
-        fwAppend.write(note.getContent());
+        fwAppend.write(note.getContent().toString()); // Needs to be edited. String changed to Arraylist
         fwAppend.close();
     }
 

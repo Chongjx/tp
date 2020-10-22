@@ -19,11 +19,9 @@ class ViewNoteCommandTest {
 
     private Notebook notebook;
 
-    private static final String NOTE1_CONTENT = "This is a test note";
-    private static final String NOTE2_CONTENT = "This is a test note"
-                                                + "With some lines"
-                                                + "  \n"
-                                                + "This is the end";
+    private static final ArrayList<String> NOTE1_CONTENT = new ArrayList<>();
+
+    private static final ArrayList<String> NOTE2_CONTENT = new ArrayList<>();
 
     private static final String NOTE1_TITLE = "TestNote1";
     private static final String NOTE2_TITLE = "TestNote2";
@@ -34,6 +32,13 @@ class ViewNoteCommandTest {
 
     @BeforeEach
     void setUp() {
+        NOTE1_CONTENT.add("This is a test note");
+
+        NOTE2_CONTENT.add("This is a test note");
+        NOTE2_CONTENT.add("With some lines");
+        NOTE2_CONTENT.add("");
+        NOTE2_CONTENT.add("This is the end");
+
         tags.add(tag1);
         tags.add(tag2);
 
@@ -49,13 +54,22 @@ class ViewNoteCommandTest {
     @Test
     void execute_inputIndex_NoteExists_returnsContent() {
         String tagsName = "";
+        String contentOne = "";
+        String contentTwo = "";
 
         for (Tag t : tags) {
             tagsName = tagsName.concat(t.toString());
         }
 
-        String note1ExpectedOutput = NOTE1_TITLE + " " + Formatter.LS + NOTE1_CONTENT;
-        String note2ExpectedOutput = NOTE2_TITLE + " " + tagsName + Formatter.LS + NOTE2_CONTENT;
+        for (String line : NOTE1_CONTENT) {
+            contentOne += Formatter.LS + line;
+        }
+        for (String line : NOTE2_CONTENT) {
+            contentTwo += Formatter.LS + line;
+        }
+
+        String note1ExpectedOutput = NOTE1_TITLE + " " + contentOne;
+        String note2ExpectedOutput = NOTE2_TITLE + " " + tagsName + contentTwo;
 
         assertEquals(note1ExpectedOutput, getExecutionStringInputIndex(notebook, 0));
         assertEquals(note2ExpectedOutput, getExecutionStringInputIndex(notebook, 1));
@@ -64,13 +78,22 @@ class ViewNoteCommandTest {
     @Test
     void execute_inputTitle_NoteExists_returnsContent() {
         String tagsName = "";
+        String contentOne = "";
+        String contentTwo = "";
 
         for (Tag t : tags) {
             tagsName = tagsName.concat(t.toString());
         }
 
-        String note1ExpectedOutput = NOTE1_TITLE + " " + Formatter.LS + NOTE1_CONTENT;
-        String note2ExpectedOutput = NOTE2_TITLE + " " + tagsName + Formatter.LS + NOTE2_CONTENT;
+        for (String line : NOTE1_CONTENT) {
+            contentOne += Formatter.LS + line;
+        }
+        for (String line : NOTE2_CONTENT) {
+            contentTwo += Formatter.LS + line;
+        }
+
+        String note1ExpectedOutput = NOTE1_TITLE + " " + contentOne;
+        String note2ExpectedOutput = NOTE2_TITLE + " " + tagsName + contentTwo;
 
         assertEquals(note1ExpectedOutput, getExecutionStringInputTitle(notebook, NOTE1_TITLE));
         assertEquals(note2ExpectedOutput, getExecutionStringInputTitle(notebook, NOTE2_TITLE));

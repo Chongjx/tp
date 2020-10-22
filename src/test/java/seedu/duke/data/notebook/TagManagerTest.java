@@ -36,49 +36,40 @@ class TagManagerTest {
         tagPersonal = new Tag("Personal", Tag.COLOR_WHITE_STRING);
         tagDefault = new Tag("Default", Tag.COLOR_WHITE_STRING);
 
-        ArrayList<Tag> tags = new ArrayList<>();
+        ArrayList<String> contentOne = new ArrayList<>();
+        contentOne.add("This is a fun mod!");
+        ArrayList<String> contentTwo = new ArrayList<>();
+        contentTwo.add("Abstraction");
+        ArrayList<String> contentThree = new ArrayList<>();
+        contentThree.add("1+1=0");
+        ArrayList<String> contentFour = new ArrayList<>();
+        contentFour.add("My name is ABC");
+        ArrayList<String> contentFive = new ArrayList<>();
+        contentFive.add("Default");
 
+        ArrayList<Tag> tags = new ArrayList<>();
         tags.add(tagCS2113);
         tags.add(tagImportant);
         tags.add(tagSchool);
 
-        noteCS2113 = new Note("CS2113",
-                "This is a fun mod!",
-                false,
-                false,
-                tags);
+        noteCS2113 = new Note("CS2113", contentOne, false, false, tags);
 
-        noteJavaOop = new Note("Java OOP",
-                "Abstraction",
-                false,
-                false,
-                tags);
+        noteJavaOop = new Note("Java OOP", contentTwo, false, false, tags);
 
         tags = new ArrayList<>();
 
         tags.add(tagSchool);
         tags.add(tagImportant);
 
-        noteMath = new Note("Math Note",
-                "1+1=0",
-                false,
-                false,
-                tags);
+        noteMath = new Note("Math Note", contentThree, false, false, tags);
 
         tags = new ArrayList<>();
 
         tags.add(tagPersonal);
 
-        notePersonal = new Note("Personal Note",
-                "My name is ABC",
-                false,
-                false,
-                tags);
+        notePersonal = new Note("Personal Note", contentFour, false, false, tags);
 
-        noteDefault = new Note("Default",
-                "Default",
-                false,
-                false);
+        noteDefault = new Note("Default", contentFive, false, false);
 
         emptyTagManager = new TagManager();
         defaultTagManager = new TagManager();

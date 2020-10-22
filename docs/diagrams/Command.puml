@@ -19,24 +19,28 @@ Package " "<<Rectangle>>{
     Class RemindCommand
     Class TagCommand
     Class ViewNoteCommand
+    Class ArchiveNoteCommand
+    Class UnarchiveNoteCommand
 }
 
 ExitCommand --|> Command 
 AddEventCommand --|> Command 
 AddNoteCommand --|> Command 
+ArchiveNoteCommand --|> Command 
 CreateTagCommand --|> Command 
 DeleteNoteCommand --|> Command 
 DeleteTagCommand --|> Command 
 EditEventCommand --|> Command 
 EditNoteCommand --|> Command 
-HelpCommand --|> Command 
 FindCommand --|> Command 
-PinCommand --|> Command 
-TagCommand --|> Command 
+HelpCommand --|> Command 
 ListEventCommand --|> Command 
 ListNoteCommand --|> Command 
-ListTagCommand --|> Command 
+ListTagCommand --|> Command
+PinCommand --|> Command 
 RemindCommand --|> Command 
+TagCommand --|> Command 
+UnarchiveNoteCommand --|> Command 
 ViewNoteCommand --|> Command 
 
 @enduml

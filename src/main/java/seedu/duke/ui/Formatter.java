@@ -3,6 +3,9 @@ package seedu.duke.ui;
 import com.diogonunes.jcolor.Attribute;
 import seedu.duke.command.AddEventCommand;
 import seedu.duke.data.notebook.Note;
+import seedu.duke.data.timetable.RecurringEvent;
+import seedu.duke.data.timetable.Reminder;
+import seedu.duke.data.timetable.Timetable;
 import seedu.duke.data.timetable.Event;
 import seedu.duke.data.timetable.Timetable;
 
@@ -16,7 +19,9 @@ import static com.diogonunes.jcolor.Ansi.colorize;
 
 public class Formatter {
 
-    /** A platform independent line separator. */
+    /**
+     * A platform independent line separator.
+     */
     public static final String LS = System.lineSeparator();
 
     private static final String ROW_SPLIT = "=";
@@ -26,11 +31,17 @@ public class Formatter {
     private static final String EMPTY_STRING = " ";
     private static final char EMPTY_CHAR = ' ';
 
-    /** Maximum number of characters within a row. */
+    /**
+     * Maximum number of characters within a row.
+     */
     private static final int MAX_ROW_LENGTH = 100;
-    /** Maximum length of message to within a row, minus the start and end formatting. */
+    /**
+     * Maximum length of message to within a row, minus the start and end formatting.
+     */
     private static final int MAX_MESSAGE_LENGTH = MAX_ROW_LENGTH - COLUMN_START.length() - COLUMN_END.length();
-    /** Length of a ansi defined color. */
+    /**
+     * Length of a ansi defined color.
+     */
     private static final int ANSI_PREFIX_LENGTH = 5;
 
     /**
@@ -63,9 +74,9 @@ public class Formatter {
                     + note.getTagsName(), Attribute.BRIGHT_CYAN_TEXT());
             formattedString = formattedString.concat(colorText);
 
-            int truncatedContentLength = Math.min(note.getContent().length(), MAX_MESSAGE_LENGTH - 50);
+            int truncatedContentLength = Math.min(note.getContent().get(0).length(), MAX_MESSAGE_LENGTH - 50);
 
-            String truncatedContent = note.getContent().substring(0, truncatedContentLength).concat("...");
+            String truncatedContent = note.getContent().get(0).substring(0, truncatedContentLength).concat("...");
             formattedString = formattedString.concat(LS + truncatedContent + LS);
             formattedString = formattedString.concat(generatesRowSplit());
 
@@ -77,13 +88,10 @@ public class Formatter {
     public static String formatNote(String header, Note note) {
         String formattedString = "";
 
-        if (!note.getTagsName().isBlank()) {
-            header = header.concat(" " + note.getTagsName());
-        }
+        header = header.concat(" " + note.getTagsName());
 
         formattedString = formattedString.concat(generatesHeader(header));
-        String[] lines = note.getContent().split("\\n");
-        for (String line : lines) {
+        for (String line : note.getContent()) {
             formattedString = formattedString.concat(encloseRow(line));
         }
         return encloseTopAndBottom(formattedString);
@@ -100,6 +108,79 @@ public class Formatter {
     }
 
     /**
+     * Formats a provided event to an ArrayList format.
+     *
+     * @param event Event to be formatted
+     * @return ArrayList of Strings to represent the Event.
+     */
+    public static ArrayList<String> formatEvent(Event event) {
+        ArrayList<String> result = new ArrayList<>();
+        result.add("Event: " + event.getTitle());
+        result.add("Date: " + event.getDate().toString() + "\tTime: " + event.getTime().toString());
+        result.add("Reminder: " + event.getToRemind());
+        String repeatingString = "Repeating: " + event.getRecurring();
+        String endRecurrenceDateString = "";
+        if (event instanceof RecurringEvent) {
+            RecurringEvent recurringEvent = (RecurringEvent) event;
+            endRecurrenceDateString = recurringEvent.getEndRecurrenceString();
+        }
+        result.add(repeatingString + endRecurrenceDateString);
+        return result;
+    }
+
+    public static String formatEventString(Event event) {
+        return formatString(formatEvent(event), false);
+    }
+
+    /**
+     * Provides a wrapper around formatEvent to add a header at the head of the ArrayList.
+     *
+     * @param event Event to be formatted
+     * @param header Header to be placed at the front.
+     * @return ArrayList of Strings to represent the Event.
+     */
+    public static String formatEventString(String header, Event event) {
+        ArrayList<String> result = formatEvent(event);
+        result.add(0, header);
+        return formatString(result, true);
+    }
+
+
+    /**
+     * Converts a header and an ArrayList of reminders into a formatted string to be printed.
+     *
+     *
+     * @param header Success message to print.
+     * @param reminders Reminders to be printed
+     * @return String representation of all reminders to be shown.
+     */
+    public static String formatReminders(String header, ArrayList<Reminder> reminders) {
+        ArrayList<String> result = new ArrayList<>();
+        result.add(header);
+        for (Reminder reminder : reminders) {
+            result.addAll(formatReminder(reminder));
+            result.add(" ");
+        }
+        result.remove(result.size() - 1);
+
+        return formatString(result, true);
+    }
+
+    /**
+     * Formats a provided event to an ArrayList format.
+     *
+     * @param reminder Reminder to be formatted.
+     * @return ArrayList of Strings to represent the Reminder.
+     */
+    public static ArrayList<String> formatReminder(Reminder reminder) {
+        Event event = reminder.getEvent();
+        ArrayList<String> result = new ArrayList<>();
+        result.add("Event: " + event.getTitle());
+        result.add("Date: " + event.getDate().toString() + "\tTime: " + event.getTime().toString());
+        return result;
+    }
+
+    /**
      * Formats a string to be printed out.
      *
      * @param message String to be formatted.
@@ -112,7 +193,7 @@ public class Formatter {
     /**
      * Formats an arraylist of strings to be printed out. Each element in the list will be printed in a newline.
      *
-     * @param messages Arraylist of strings to be formatted.
+     * @param messages  Arraylist of strings to be formatted.
      * @param hasHeader Determines if there is a header. Header MUST be the first element in the list.
      * @return Formatted message.
      */
@@ -135,7 +216,7 @@ public class Formatter {
     /**
      * Formats a array of strings to be printed out. Each element in the list will be printed in a newline.
      *
-     * @param messages Array of strings to be formatted.
+     * @param messages  Array of strings to be formatted.
      * @param hasHeader Determines if there is a header. Header MUST be the first element in the list.
      * @return Formatted message.
      */
@@ -253,10 +334,10 @@ public class Formatter {
      * Returns the number of ascii code that appear within the message. Also match the start and end of index of each
      * color.
      *
-     * @param message String of the message to check.
+     * @param message                     String of the message to check.
      * @param coloredStringStartIndexList Arraylist of index to mark the start of a color.
-     * @param coloredStringEndIndexList Arraylist of index to mark the end of a color.
-     * @param stringColorList Arraylist of string to store the color present.
+     * @param coloredStringEndIndexList   Arraylist of index to mark the end of a color.
+     * @param stringColorList             Arraylist of string to store the color present.
      * @return Number of Ascii code that appeared.
      */
     private static int getNumAsciiCode(String message,

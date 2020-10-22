@@ -33,15 +33,20 @@ class TagCommandTest {
     private TagManager tagManager;
     private Notebook notebook;
 
+    private ArrayList<String> content;
+
     @BeforeEach
     void setUp() {
+        content = new ArrayList<>();
+        content.add("default");
+
         tagRed = new Tag("Red", Tag.COLOR_RED_STRING);
         tagBlue = new Tag("Blue", Tag.COLOR_BLUE_STRING);
         tagRedRef = new Tag("Red", Tag.COLOR_RED_STRING);
         tagBlueRef = new Tag("Blue", Tag.COLOR_BLUE_STRING);
 
-        noTagNote = new Note("Default", "default", false, false);
-        taggedNote = new Note("TaggedNote", "default", false, false);
+        noTagNote = new Note("Default", content, false, false);
+        taggedNote = new Note("TaggedNote", content, false, false);
 
         tags = new ArrayList<>();
 

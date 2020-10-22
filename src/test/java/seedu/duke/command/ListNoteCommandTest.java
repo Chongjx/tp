@@ -17,31 +17,43 @@ class ListNoteCommandTest {
     Notebook notebook;
 
     ArrayList<Note> noteArrayList = new ArrayList<>();
+    ArrayList<Tag> tag = new ArrayList<>();
+    ArrayList<Tag> tagSet = new ArrayList<>();
 
     Note defaultNote;
     Note testNote1;
     Note cs2113;
     Note songLyrics;
 
+    Tag tagSports;
+    Tag tagCs2113;
+    Tag tagNus;
+
     @BeforeEach
     void setup() {
         notebook = new Notebook();
 
-        Tag tagSports = new Tag("Sports", Tag.COLOR_RED_STRING);
-        Tag tagCs2113 = new Tag("CEG", Tag.COLOR_YELLOW_STRING);
-        Tag tagNus  = new Tag("NUS", Tag.COLOR_BLUE_STRING);
+        tagSports = new Tag("Sports", Tag.COLOR_RED_STRING);
+        tagCs2113 = new Tag("CEG", Tag.COLOR_YELLOW_STRING);
+        tagNus = new Tag("NUS", Tag.COLOR_BLUE_STRING);
 
-        ArrayList<Tag> tag = new ArrayList<>();
-        ArrayList<Tag> tagSet = new ArrayList<>();
+        ArrayList<String> content = new ArrayList<>();
+        content.add("default");
+        ArrayList<String> contentOne = new ArrayList<>();
+        contentOne.add("testing");
+        ArrayList<String> contentTwo = new ArrayList<>();
+        contentTwo.add("JavaDocs");
+        ArrayList<String> contentThree = new ArrayList<>();
+        contentThree.add("I like to move it move it");
 
         tag.add(tagSports);
         tagSet.add(tagCs2113);
         tagSet.add(tagNus);
 
-        defaultNote = new Note("Default", "default", false, false, tag);
-        testNote1 = new Note("TestNote1", "testing", true, false);
-        cs2113 = new Note("CS2113", "JavaDocs", true, false, tagSet);
-        songLyrics = new Note("Song Lyrics", "I like to move it move it", false, false);
+        defaultNote = new Note("Default", content, false, false, tag);
+        testNote1 = new Note("TestNote1", contentOne, true, false);
+        cs2113 = new Note("CS2113", contentTwo, true, false, tagSet);
+        songLyrics = new Note("Song Lyrics", contentThree, false, false);
 
         //notebook.addNote(testNote1);
         //notebook.addNote(CS2113);

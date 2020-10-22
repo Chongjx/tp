@@ -17,18 +17,26 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class AddNoteCommandTest {
+    Notebook notebook;
+    Timetable timetable;
+    TagManager tagManager;
+    StorageManager storageManager;
 
     /**
      * Asserts that the note can be added successfully.
      */
     @Test
     public void addCommand_emptyNotebook_notebookContainsPerson() {
-        Notebook notebook = new Notebook();
-        Timetable timetable = new Timetable();
-        TagManager tagManager = new TagManager();
-        StorageManager storageManager = new StorageManager();
+        notebook = new Notebook();
+        timetable = new Timetable();
+        tagManager = new TagManager();
+        storageManager = new StorageManager();
 
-        Note note = new Note("Java OOP", "Encapsulation\nAbstraction", true, false);
+        ArrayList<String> content = new ArrayList<>();
+        content.add("Encapsulation");
+        content.add("Abstraction");
+
+        Note note = new Note("Java OOP", content, true, false);
         AddNoteCommand command = null;
         try {
             command = new AddNoteCommand(note);
@@ -51,12 +59,16 @@ class AddNoteCommandTest {
      */
     @Test
     public void addCommand_notebookAlreadyContainsTitle_notebookUnmodified() {
-        Notebook notebook = new Notebook();
-        Timetable timetable = new Timetable();
-        TagManager tagManager = new TagManager();
-        StorageManager storageManager = new StorageManager();
+        notebook = new Notebook();
+        timetable = new Timetable();
+        tagManager = new TagManager();
+        storageManager = new StorageManager();
 
-        Note note = new Note("Java OOP", "Encapsulation\nAbstraction", true, false);
+        ArrayList<String> content = new ArrayList<>();
+        content.add("Encapsulation");
+        content.add("Abstraction");
+
+        Note note = new Note("Java OOP", content, true, false);
         notebook.addNote(note);
         AddNoteCommand command = null;
         try {

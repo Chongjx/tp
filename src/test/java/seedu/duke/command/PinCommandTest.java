@@ -9,18 +9,22 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import seedu.duke.data.notebook.Note;
 import seedu.duke.data.notebook.Notebook;
 
+import java.util.ArrayList;
+
 class PinCommandTest {
     private Note notePinned;
     private Note noteNotPinned;
 
     private Notebook notebook;
 
-    private static final String NOTE_CONTENT = "This is a test note.";
+    private static final ArrayList<String> NOTE_CONTENT = new ArrayList<>();
+
     private static final String NOTE1_TITLE = "TestNote1";
     private static final String NOTE2_TITLE = "TestNote2";
 
     @BeforeEach
     void setUp() {
+        NOTE_CONTENT.add("This is a test note.");
         notePinned = new Note(NOTE1_TITLE, NOTE_CONTENT, true, false);
         noteNotPinned = new Note(NOTE2_TITLE, NOTE_CONTENT, false, false);
 

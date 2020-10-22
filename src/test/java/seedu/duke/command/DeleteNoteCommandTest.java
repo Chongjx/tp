@@ -26,8 +26,16 @@ class DeleteNoteCommandTest {
 
     @BeforeEach
     public void setUp() {
-        Note javaNote = new Note("Java OOP", "Encapsulation\nAbstraction", true, false);
-        Note cppNote = new Note("C++ Standard Libraries", "Core library\nStandard library", false, false);
+        ArrayList<String> contentOne = new ArrayList<>();
+        contentOne.add("Encapsulation");
+        contentOne.add("Abstraction");
+
+        ArrayList<String> contentTwo = new ArrayList<>();
+        contentTwo.add("Core library");
+        contentTwo.add("Standard library");
+
+        Note javaNote = new Note("Java OOP", contentOne, true, false);
+        Note cppNote = new Note("C++ Standard Libraries", contentTwo, false, false);
 
         AddNoteCommand command = null;
         try {
@@ -65,7 +73,7 @@ class DeleteNoteCommandTest {
      * The Notebook passed in will not be modified.
      *
      * @param targetVisibleIndex of the item to be deleted.
-     * @param notebook contains list of notes.
+     * @param notebook           contains list of notes.
      */
     private void assertDeletionSuccessfulInteger(int targetVisibleIndex, Notebook notebook) {
 
@@ -84,7 +92,7 @@ class DeleteNoteCommandTest {
      * The Notebook passed in will not be modified.
      *
      * @param targetString of the item to be deleted.
-     * @param notebook contains list of notes.
+     * @param notebook     contains list of notes.
      */
     private void assertDeletionSuccessfulString(String targetString, Notebook notebook) {
 
@@ -111,7 +119,7 @@ class DeleteNoteCommandTest {
      * Creates a new delete command using index to delete.
      *
      * @param targetVisibleIndex of the item to be deleted.
-     * @param notebook contains list of notes.
+     * @param notebook           contains list of notes.
      */
     private DeleteNoteCommand createDeleteCommand(int targetVisibleIndex, Notebook notebook) {
 
@@ -124,7 +132,7 @@ class DeleteNoteCommandTest {
      * Creates a new delete command using String to delete.
      *
      * @param targetVisibleString of the item to be deleted.
-     * @param notebook contains list of notes.
+     * @param notebook            contains list of notes.
      */
     private DeleteNoteCommand createDeleteCommand(String targetVisibleString, Notebook notebook) {
         DeleteNoteCommand command = new DeleteNoteCommand(targetVisibleString);
@@ -138,7 +146,7 @@ class DeleteNoteCommandTest {
      * The Notebook passed in will not be modified.
      *
      * @param visibleIndex of the item to be deleted.
-     * @param notebook contains list of notes.
+     * @param notebook     contains list of notes.
      */
     private void assertDeletionFailsDueToNoSuchPersonInteger(int visibleIndex, Notebook notebook) {
         DeleteNoteCommand command = createDeleteCommand(visibleIndex, notebook);
@@ -154,7 +162,7 @@ class DeleteNoteCommandTest {
      * The Notebook passed in will not be modified.
      *
      * @param targetVisibleString of the item to be deleted.
-     * @param notebook contains list of notes.
+     * @param notebook            contains list of notes.
      */
     private void assertDeletionFailsDueToNoSuchPersonString(String targetVisibleString, Notebook notebook) {
         DeleteNoteCommand command = createDeleteCommand(targetVisibleString, notebook);
