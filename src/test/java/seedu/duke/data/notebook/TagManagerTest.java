@@ -45,10 +45,12 @@ class TagManagerTest {
         noteCS2113 = new Note("CS2113",
                 "This is a fun mod!",
                 false,
+                false,
                 tags);
 
         noteJavaOop = new Note("Java OOP",
                 "Abstraction",
+                false,
                 false,
                 tags);
 
@@ -60,6 +62,7 @@ class TagManagerTest {
         noteMath = new Note("Math Note",
                 "1+1=0",
                 false,
+                false,
                 tags);
 
         tags = new ArrayList<>();
@@ -69,10 +72,12 @@ class TagManagerTest {
         notePersonal = new Note("Personal Note",
                 "My name is ABC",
                 false,
+                false,
                 tags);
 
         noteDefault = new Note("Default",
                 "Default",
+                false,
                 false);
 
         emptyTagManager = new TagManager();

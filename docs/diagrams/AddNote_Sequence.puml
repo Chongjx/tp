@@ -1,0 +1,60 @@
+@startuml
+box "Parser" #LightBlue
+
+Notus -> Parser: parseCommand(add-n /t Java OOP /pin true /tag CS2113 red /tag OOP)
+activate Parser #DarkSalmon
+
+Parser -> Parser: prepareAddNote(add-n /t Java OOP /pin true /tag CS2113 red /tag OOP)
+activate Parser #DarkSalmon
+Parser -> Parser: handleTagPrefix(add-n /t Java OOP /pin true /tag CS2113 red /tag OOP)
+activate Parser #DarkSalmon
+
+Parser -> Tag: Tag(CS2113, red), Tag(OOP, "")
+activate Tag #DarkSalmon
+Tag --> Parser: tag
+deactivate Tag
+
+Parser --> Parser: tag
+deactivate Parser
+
+Parser -> Note: note(Java OOP, "", true, tags)
+activate Note #DarkSalmon
+deactivate Note
+Note --> Parser: note
+Parser -> AddNoteCommand
+deactivate Parser
+
+activate AddNoteCommand #DarkSalmon
+AddNoteCommand --> Parser
+deactivate AddNoteCommand
+deactivate Parser
+return command
+
+Notus -> Notus: executeCommand(command)
+activate Notus #DarkSalmon
+Notus -> AddNoteCommand: execute()
+activate AddNoteCommand #DarkSalmon
+AddNoteCommand -> Parser: inputContent()
+activate Parser #DarkSalmon
+return
+deactivate Parser
+
+AddNoteCommand -> TagManager: rebindTags(note)
+activate TagManager #DarkSalmon
+return
+deactivate TagManager
+
+AddNoteCommand -> Notebook: addNote(note)
+activate Notebook #DarkSalmon
+return
+deactivate Notebook
+
+deactivate AddNoteCommand
+AddNoteCommand --> Notus: result
+
+Notus --> Notus: result
+
+deactivate Notus
+
+
+@enduml

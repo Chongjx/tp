@@ -18,6 +18,7 @@ public class PrefixSyntax {
     public static final String PREFIX_CONTENT = "c";
     public static final String PREFIX_LINE = "ln";
     public static final String PREFIX_SORT = "sort";
+    public static final String PREFIX_ARCHIVE = "archive";
 
     /** Event related prefix. */
     public static final String PREFIX_TIMING = "timing";

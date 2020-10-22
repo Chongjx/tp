@@ -25,7 +25,7 @@ class StorageManagerTest {
             if (i % 2 == 0) {
                 isPinned = true;
             }
-            Note note = new Note(title, content, isPinned);
+            Note note = new Note(title, content, isPinned, false);
             notes.addNote(note);
         }
         StorageManager.saveNotebook(notes);
@@ -46,7 +46,7 @@ class StorageManagerTest {
                         + "\n"
                         + "\n"
                         + "This is the end of the note\n";
-        Note note = new Note("TestNote", content, false);
+        Note note = new Note("TestNote", content, false, false);
         try {
             StorageManager.saveNoteContent(note);
         } catch (IOException e) {

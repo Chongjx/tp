@@ -3,6 +3,7 @@ package seedu.duke.util;
 import seedu.duke.command.Command;
 import seedu.duke.command.AddNoteCommand;
 import seedu.duke.command.AddEventCommand;
+import seedu.duke.command.ArchiveNoteCommand;
 import seedu.duke.command.CreateTagCommand;
 import seedu.duke.command.DeleteNoteCommand;
 import seedu.duke.command.DeleteEventCommand;
@@ -19,6 +20,7 @@ import seedu.duke.command.ListTagCommand;
 import seedu.duke.command.PinCommand;
 import seedu.duke.command.RemindCommand;
 import seedu.duke.command.TagCommand;
+import seedu.duke.command.UnarchiveNoteCommand;
 import seedu.duke.command.ViewNoteCommand;
 
 import seedu.duke.data.exception.SystemException;
@@ -32,6 +34,7 @@ import seedu.duke.data.timetable.WeeklyEvent;
 import seedu.duke.data.timetable.MonthlyEvent;
 import seedu.duke.data.timetable.YearlyEvent;
 
+import static seedu.duke.util.PrefixSyntax.PREFIX_ARCHIVE;
 import static seedu.duke.util.PrefixSyntax.PREFIX_DELIMITER;
 import static seedu.duke.util.PrefixSyntax.PREFIX_END;
 import static seedu.duke.util.PrefixSyntax.PREFIX_DELETE_LINE;
@@ -95,6 +98,10 @@ public class Parser {
                 return prepareAddNote(userMessage);
             case AddEventCommand.COMMAND_WORD:
                 return prepareAddEvent(userMessage);
+            case ArchiveNoteCommand.COMMAND_WORD:
+                return prepareArchiveNote(userMessage);
+            case UnarchiveNoteCommand.COMMAND_WORD:
+                return prepareUnarchiveNote(userMessage);
             case ListNoteCommand.COMMAND_WORD:
                 return prepareListNote(userMessage);
             case ListEventCommand.COMMAND_WORD:
@@ -220,6 +227,7 @@ public class Parser {
         String title = "";
         String content = "";
         boolean isPinned = false;
+        boolean isArchived = false;
         ArrayList<Tag> tags = new ArrayList<>();
 
         try {
@@ -247,7 +255,8 @@ public class Parser {
             title = checkBlank(title, ExceptionType.EXCEPTION_MISSING_TITLE_PREFIX);
 
             // Add to note
-            note = tags.isEmpty() ? new Note(title, content, isPinned) : new Note(title, content, isPinned, tags);
+            note = tags.isEmpty() ? new Note(title, content, isPinned, isArchived) :
+                    new Note(title, content, isPinned, isArchived, tags);
 
             return new AddNoteCommand(note);
         } catch (ArrayIndexOutOfBoundsException exception) {
@@ -491,6 +500,102 @@ public class Parser {
     }
 
     /**
+     * Prepare userInput into a int before archiving.
+     *
+     * @param userMessage Original string user inputs.
+     * @return Result of the archived note command.
+     * @throws SystemException if an error occurs.
+     */
+    private Command prepareArchiveNote(String userMessage) throws SystemException {
+        int index;
+        String title;
+        String prefix;
+        boolean isIndex = false;
+
+        try {
+            // Get prefix
+            ArrayList<String[]> splitInfo = splitInfoDetails(userMessage);
+
+            for (String[] infoDetails : splitInfo) {
+                prefix = infoDetails[0].toLowerCase();
+                switch (prefix) {
+                case PREFIX_INDEX:
+                    isIndex = true;
+                    index = Integer.parseInt(checkBlank(infoDetails[1], ExceptionType.EXCEPTION_MISSING_INDEX));
+
+                    if (index <= NULL_INDEX) {
+                        throw new SystemException(ExceptionType.EXCEPTION_INVALID_INDEX_VALUE);
+                    }
+                    return new ArchiveNoteCommand(index - 1);
+                case PREFIX_TITLE:
+                    title = checkBlank(infoDetails[1], ExceptionType.EXCEPTION_MISSING_TITLE);
+                    return new ArchiveNoteCommand(title);
+                default:
+                    throw new SystemException(ExceptionType.EXCEPTION_INVALID_PREFIX);
+                }
+            }
+        } catch (ArrayIndexOutOfBoundsException exception) {
+            if (isIndex) {
+                throw new SystemException(ExceptionType.EXCEPTION_MISSING_INDEX);
+            } else {
+                throw new SystemException(ExceptionType.EXCEPTION_MISSING_TITLE);
+            }
+        } catch (NumberFormatException exception) {
+            throw new SystemException(ExceptionType.EXCEPTION_INVALID_INDEX_FORMAT);
+        }
+        throw new SystemException(ExceptionType.EXCEPTION_INVALID_INPUT_FORMAT);
+    }
+
+    /**
+     * Prepare userInput into a int before un-archiving.
+     *
+     * @param userMessage Original string user inputs.
+     * @return Result of the un-archived note command.
+     * @throws SystemException if an error occurs.
+     */
+    private Command prepareUnarchiveNote(String userMessage) throws SystemException {
+        int index;
+        String title;
+        String prefix;
+        boolean isIndex = false;
+
+        try {
+            // Get prefix
+            ArrayList<String[]> splitInfo = splitInfoDetails(userMessage);
+
+            for (String[] infoDetails : splitInfo) {
+                prefix = infoDetails[0].toLowerCase();
+                switch (prefix) {
+                case PREFIX_INDEX:
+                    isIndex = true;
+                    index = Integer.parseInt(checkBlank(infoDetails[1], ExceptionType.EXCEPTION_MISSING_INDEX));
+
+                    if (index <= NULL_INDEX) {
+                        throw new SystemException(ExceptionType.EXCEPTION_INVALID_INDEX_VALUE);
+                    }
+                    return new UnarchiveNoteCommand(index - 1);
+                case PREFIX_TITLE:
+                    title = checkBlank(infoDetails[1], ExceptionType.EXCEPTION_MISSING_TITLE);
+                    return new UnarchiveNoteCommand(title);
+                default:
+                    throw new SystemException(ExceptionType.EXCEPTION_INVALID_PREFIX);
+                }
+            }
+        } catch (ArrayIndexOutOfBoundsException exception) {
+            if (isIndex) {
+                throw new SystemException(ExceptionType.EXCEPTION_MISSING_INDEX);
+            } else {
+                throw new SystemException(ExceptionType.EXCEPTION_MISSING_TITLE);
+            }
+        } catch (NumberFormatException exception) {
+            throw new SystemException(ExceptionType.EXCEPTION_INVALID_INDEX_FORMAT);
+        }
+        throw new SystemException(ExceptionType.EXCEPTION_INVALID_INPUT_FORMAT);
+    }
+
+
+
+    /**
      * Ensures that the user does not leave input blank after entering the find command word.
      *
      * @param userMessage user's input of the keyword.
@@ -530,6 +635,7 @@ public class Parser {
 
         String tagName;
         String sort;
+        boolean isArchive = false;
         Boolean isAscending = null;
         ArrayList<String> tagsName = new ArrayList<>();
         boolean isTag = false;
@@ -560,6 +666,11 @@ public class Parser {
                         throw new SystemException(ExceptionType.EXCEPTION_INVALID_SORT_TYPE);
                     }
                     break;
+                case PREFIX_ARCHIVE:
+                    isTag = false;
+                    exception = ExceptionType.EXCEPTION_MISSING_INDEX;
+                    isArchive = true;
+                    break;
                 default:
                     throw new SystemException(ExceptionType.EXCEPTION_INVALID_PREFIX);
                 }
@@ -571,17 +682,21 @@ public class Parser {
                 throw new SystemException(ExceptionType.EXCEPTION_MISSING_SORT);
             }
         }
+
+        if (isArchive) {
+            return new ListNoteCommand(isArchive);
+        }
         
         // No optional parameters case as it is already accounted
         // Minimally if no tag, will have up/down and vice versa
-        if (tagsName.isEmpty()) {
+        if (tagsName.isEmpty() && isAscending == null) {
+            return new ListNoteCommand();
+        } else if (tagsName.isEmpty() && isAscending != null) {
             return new ListNoteCommand(isAscending);
+        } else if (!tagsName.isEmpty() && isAscending == null) {
+            return new ListNoteCommand(tagsName);
         } else {
-            if (isAscending == null) {
-                return new ListNoteCommand(tagsName);
-            } else {
-                return new ListNoteCommand(isAscending, tagsName);
-            }
+            return new ListNoteCommand(isAscending, tagsName);
         }
     }
 
@@ -856,3 +971,16 @@ public class Parser {
     }
     */
 }
+
+
+
+
+
+
+
+
+
+
+
+
+

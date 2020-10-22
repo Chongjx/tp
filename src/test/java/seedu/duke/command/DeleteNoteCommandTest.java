@@ -26,8 +26,8 @@ class DeleteNoteCommandTest {
 
     @BeforeEach
     public void setUp() {
-        Note javaNote = new Note("Java OOP", "Encapsulation\nAbstraction", true);
-        Note cppNote = new Note("C++ Standard Libraries", "Core library\nStandard library", false);
+        Note javaNote = new Note("Java OOP", "Encapsulation\nAbstraction", true, false);
+        Note cppNote = new Note("C++ Standard Libraries", "Core library\nStandard library", false, false);
 
         AddNoteCommand command = null;
         try {

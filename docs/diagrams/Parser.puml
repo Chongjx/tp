@@ -1,0 +1,42 @@
+@startuml
+Notus -> Parser: ParseCommand()
+
+alt add-n
+Parser -> Parser: prepareAddNote()
+Parser -> Command: <<new>>
+Parser <-- Command
+Notus <-- Parser
+else delete-n
+Parser -> Parser: prepareDeleteNote()
+Parser -> Command: <<new>>
+Parser <-- Command
+Notus <-- Parser
+else edit-n
+Parser -> Parser: prepareEditNote()
+Parser -> Command: <<new>>
+Parser <-- Command
+Notus <-- Parser
+end
+
+@enduml
+
+@startuml
+
+-> AddNoteCommand: <<new>>
+<-- AddNoteCommand:
+
+@enduml
+
+@startuml
+
+-> DeleteNoteCommand: <<new>>
+<-- DeleteNoteCommand:
+
+@enduml
+
+@startuml
+
+-> EditNoteCommand: <<new>>
+<-- EditNoteCommand:
+
+@enduml

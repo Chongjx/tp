@@ -2,6 +2,7 @@
 
 ## Table of Contents
 #### [1. Introduction](#intro)
+##### &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[1.1 Setting up and getting started](#setup)
 #### [2. Design & Implementation](#design)
 ##### &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[2.1 Architecture Overview](#overview)
 #### [3. Product Scope](#scope)
@@ -21,13 +22,23 @@ NotUS is a quick and simple, Command Line Interface (CLI) based, note-taking app
 
 This document describes the design, implementation and architecture of NotUS.
 
+#### <a id="setup"><ins>1.1 Setting up and getting started</ins></a>
+
+**Prerequisites:**
+* JDK 11
+* IntelliJ IDE
+
+Fork this repo and clone it onto your local machine.
+Import the project as a <b>Gradle project</b>.
+Ensures that you are using the correct JDK version (For this project we are using JDK 11).
+
 <br>
 
 ## <a id="design">2. Design & Implementation</a>
 
 This section seeks to explain the high-level design of the application. Given below is a quick overview of each component and the explanation of the design architecture in greater detail.
-Duke is the main class of the application, and handles the initializing the appropriate classes to be used as well as the execution.
-
+NotUS is the main class of the application, and handles the initializing the appropriate classes to be used as well as
+ the execution.
 
 #### <a id="overview"><ins>2.1 Architecture Overview</ins></a>
 
@@ -36,15 +47,33 @@ Duke is the main class of the application, and handles the initializing the appr
   <br><em>Figure 1</em>
 </p>
 
-The architecture design is given in the diagram above. Duke is directly connected to the following components:
+The architecture design is given in the diagram above. The main components of NotUS are:
 
-1. `InterfaceManager`: The main interactions the user experiences.
+1. `InterfaceManager`: Manages the user input as well as the message output from application.
 1. `Parser`: Makes sense of user input, and parses the information to the respective commands.
 1. `Command`: Executes the necessary tasks, depending on the respective command calls .
-1. `TagManager`: Deals with all things related to tags.
-1. `Timetable`: Deals with all things related to events.
-1. `Notebook`: Deals with all things related to notes.
-1. `StorageManager`: Deals with loading existing files/exporting data to human-editable files
+1. `TagManager`: Stores and manages the creation and deletion of tags and other tag-related functionality.
+1. `Timetable`: Stores and manages the creation and deletion of events and other event-related functionality.
+1. `Notebook`: Stores and manages the creation and deletion of notes and other note-related functionality.
+1. `StorageManager`: Manages the loading of existing saved files and exporting of data to human-editable files
+
+**NotUS** manages the flow of the application. On launch, it will create the necessary components, as listed above
+ and then attempts to load any existing saved files into the application. Subsequently, it will accept and interpret
+the user input and execute the commands accordingly. The diagram below depicts the main flow of the application.
+
+{insert Notus.puml here}
+
+<br>
+
+**Parser**
+
+1. Receives the user input message as a whole.
+1. Interprets the type of command and splits the message to identify all the parameters provided.
+1. Creates and returns the Command class respectively.
+ 
+ {insert Parser.puml here}
+
+**Command** classes
 
 <br>
 
@@ -98,15 +127,26 @@ A all-in-one solution for note-taking and managing your schedule.
 
 ## <a id="nfr">5. Non-Functional Requirements</a>
 
-1. Must have Java 11 installed
-2.
-3.
+| Requirement Type | Description |
+|------------------|-------------|
+|Constraint|Single user product|
+|Performance|Software should not be dependent on a remote server|
+|Performance|Software should not exceed 100Mb for JAR file and 15MB per PDF file|
+|Quality|Users should prefer CLI/Typing|
+|Technical|Must have Java 11 installed|
+|Technical|No DBMS, all data to be stored locally|
+|Technical|Data stored must be in human-editable files|
+|Technical|Programme should be platform independent|
+|Technical|Programme should work without an installer|
 
+<br>
 
 ## <a id="gloss">6. Glossary</a>
 
-* *glossary item* - Definition
+* *CLI* - Command Line Interface
+* *DBMS* - Database Management System
 
+<br>
 
 ## <a id="testinstr">7. Instructions for Manual Testing</a>
 

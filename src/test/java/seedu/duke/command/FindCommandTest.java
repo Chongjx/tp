@@ -18,9 +18,9 @@ class FindCommandTest {
     void setup() {
         notebook = new Notebook();
 
-        Note defaultNote = new Note("Default", "default", false);
-        Note testNote1 = new Note("TestNote1", "default", false);
-        Note testNote2 = new Note("TestNote2", "default", false);
+        Note defaultNote = new Note("Default", "default", false, false);
+        Note testNote1 = new Note("TestNote1", "default", false, false);
+        Note testNote2 = new Note("TestNote2", "default", false, false);
 
         notebook.addNote(defaultNote);
         notebook.addNote(testNote1);

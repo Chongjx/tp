@@ -39,7 +39,7 @@ class DeleteTagCommandTest {
         tags = new ArrayList<>();
         tagManager = new TagManager();
 
-        defaultNote = new Note("Default", "Default", false);
+        defaultNote = new Note("Default", "Default", false, false);
     }
 
     @Test

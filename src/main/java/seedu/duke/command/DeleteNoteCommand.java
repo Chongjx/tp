@@ -12,7 +12,7 @@ import static seedu.duke.util.PrefixSyntax.PREFIX_TITLE;
 import static seedu.duke.util.PrefixSyntax.PREFIX_INDEX;
 
 /**
- * Deletes a Note from the Notebook or an Event from the Timetable.
+ * Deletes a Note from the Notebook.
  */
 public class DeleteNoteCommand extends Command {
 
@@ -29,7 +29,7 @@ public class DeleteNoteCommand extends Command {
     private String title = "";
 
     /**
-     * Constructs a DeleteNoteCommand to delete a Note or an Event.
+     * Constructs a DeleteNoteCommand to delete a Note.
      *
      * @param index of the item to be deleted.
      */
@@ -38,7 +38,7 @@ public class DeleteNoteCommand extends Command {
     }
 
     /**
-     * Constructs a DeleteNoteCommand to delete a Note or an Event.
+     * Constructs a DeleteNoteCommand to delete a Note.
      *
      * @param title of the item to be deleted.
      */

@@ -28,7 +28,7 @@ class AddNoteCommandTest {
         TagManager tagManager = new TagManager();
         StorageManager storageManager = new StorageManager();
 
-        Note note = new Note("Java OOP", "Encapsulation\nAbstraction", true);
+        Note note = new Note("Java OOP", "Encapsulation\nAbstraction", true, false);
         AddNoteCommand command = null;
         try {
             command = new AddNoteCommand(note);
@@ -56,7 +56,7 @@ class AddNoteCommandTest {
         TagManager tagManager = new TagManager();
         StorageManager storageManager = new StorageManager();
 
-        Note note = new Note("Java OOP", "Encapsulation\nAbstraction", true);
+        Note note = new Note("Java OOP", "Encapsulation\nAbstraction", true, false);
         notebook.addNote(note);
         AddNoteCommand command = null;
         try {

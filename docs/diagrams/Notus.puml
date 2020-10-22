@@ -1,0 +1,21 @@
+@startuml
+Notus -> StorageManager: Load saved file
+Notus <-- StorageManager: Load result
+
+loop !Exit Command
+Notus -> InterfaceManager: getUserCommandInput()
+Notus <-- InterfaceManager: userInput
+
+Notus -> Parser: parseCommand()
+Notus <-- Parser: new Command
+
+Notus -> Command: setData()
+Notus <-- Command
+Notus -> Command: execute()
+Notus <-- Command: execute result
+Notus -> InterfaceManager: prints()
+Notus <-- InterfaceManager
+
+end
+
+@enduml

@@ -32,6 +32,10 @@ data/notes/TestNote.txt
 /FindCommand.log
 /HelpCommand.log
 /HelpCommand.log.1
+/TagManager.log.1
+/TagManager.log.1.lck
 
 *.log
 HelpCommand.log.lck
+TagManager.log.lck
+TagManager.log.lck.1

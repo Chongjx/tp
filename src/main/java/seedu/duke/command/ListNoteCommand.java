@@ -4,17 +4,14 @@ import seedu.duke.data.notebook.Note;
 import seedu.duke.data.notebook.Tag;
 import seedu.duke.ui.Formatter;
 
-import java.util.Collections;
-import java.util.Comparator;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.ArrayList;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
+import static seedu.duke.ui.Formatter.formatNotes;
 import static seedu.duke.util.PrefixSyntax.PREFIX_DELIMITER;
 import static seedu.duke.util.PrefixSyntax.PREFIX_TAG;
-import static seedu.duke.util.PrefixSyntax.SUFFIX_INDEX;
 
 /**
  * Lists all the Notes in the Notebook.
@@ -28,13 +25,16 @@ public class ListNoteCommand extends Command {
             + PREFIX_DELIMITER + PREFIX_TAG + " TAG1...] "
             + "[/sort up OR down]";
 
-    public static final String COMMAND_SUCCESSFUL_MESSAGE = "Here are the list of notes: " + Formatter.LS;
+    public static final String PINNED_MESSAGE = "Here are the list of pinned notes:";
+    public static final String UNPINNED_MESSAGE = "Here are the list of unpinned notes:";
+    public static final String COMMAND_SUCCESSFUL_MESSAGE = "Here are the list of notes:";
     public static final String COMMAND_UNSUCCESSFUL_MESSAGE_INVALID_TAG = "Your tags return no result."
             + " Please try an alternative tag or check your spellings";
     public static final String COMMAND_UNSUCCESSFUL_MESSAGE_EMPTY_NOTEBOOK = "The notebook is empty!";
 
     private ArrayList<String> tags;
     private boolean isSorted;
+    private boolean isArchived;
     private Boolean isAscendingOrder;
 
     /**
@@ -45,6 +45,7 @@ public class ListNoteCommand extends Command {
     public ListNoteCommand(Boolean isAscendingOrder) {
         this.tags = null;
         this.isSorted = true;
+        this.isArchived = false;
         this.isAscendingOrder = isAscendingOrder;
     }
 
@@ -54,6 +55,17 @@ public class ListNoteCommand extends Command {
     public ListNoteCommand() {
         this.tags = null;
         this.isSorted = false;
+        this.isArchived = false;
+        this.isAscendingOrder = null;
+    }
+
+    /**
+     * Constructs a ListNoteCommand to list all the Notes in the Archived Notebook.
+     */
+    public ListNoteCommand(boolean isArchived) {
+        this.tags = null;
+        this.isSorted = false;
+        this.isArchived = true;
         this.isAscendingOrder = null;
     }
 
@@ -63,7 +75,9 @@ public class ListNoteCommand extends Command {
      * @param tags tags of the Notes.
      */
     public ListNoteCommand(ArrayList<String> tags) {
-        this(false);
+        this.isSorted = false;
+        this.isArchived = false;
+        this.isAscendingOrder = null;
         this.tags = tags;
     }
 
@@ -74,7 +88,9 @@ public class ListNoteCommand extends Command {
      * @param tags tags of the Notes.
      */
     public ListNoteCommand(Boolean isAscendingOrder, ArrayList<String> tags) {
-        this(isAscendingOrder);
+        this.isAscendingOrder = isAscendingOrder;
+        this.isSorted = true;
+        this.isArchived = false;
         this.tags = tags;
     }
 
@@ -89,57 +105,41 @@ public class ListNoteCommand extends Command {
      */
     @Override
     public String execute() {
-        StringBuilder noteString = new StringBuilder();
-        StringBuilder pinnedNotesSorted;
-        StringBuilder unpinnedNotesSorted;
-        ArrayList<Note> notes = new ArrayList<>();
-        ArrayList<Note> pinnedNotes = new ArrayList<>();
-        ArrayList<Note> unpinnedNotes = new ArrayList<>();
 
-        for (int i = 0; i < notebook.getNotes().size(); i++) {
-            String pinnedNoteStatus = notebook.getNotes().get(i).getPinned();
-            if (pinnedNoteStatus.equals("Y")) {
-                pinnedNotes.add(notebook.getNotes().get(i));
-            } else {
-                unpinnedNotes.add(notebook.getNotes().get(i));
-            }
+        ArrayList<Note> notes = new ArrayList<>();
+        ArrayList<Note> pinned;
+        ArrayList<Note> unpinned;
+
+
+        if (isArchived) {
+            notes = notebook.getArchivedNotes();
+            return formatNotes(COMMAND_SUCCESSFUL_MESSAGE, notes);
         }
 
-        // Takes the notes in the notebook and sorts them according to title, alphabetically (a-z)
-        ArrayList<Note> sortedNotes = (ArrayList<Note>) notebook.getNotes().stream()
-                .filter(Objects::nonNull)
-                .sorted(Comparator.comparing(a -> a.getTitle().toLowerCase()))
-                .collect(Collectors.toList());
+        if (!notebook.checkPinned() && tags == null) {
+            if (!isSorted) {
+                notes = notebook.getNotes();
+            } else if (isSorted) {
+                notes = notebook.getSortedList(isAscendingOrder, (Boolean) null);
+            }
 
-        if (tags == null) {
-            if (isAscendingOrder == null && pinnedNotes.isEmpty()) {
-                noteString = getNoteString(notebook.getNotes());
-            } else if (isAscendingOrder == null) {
-                noteString.append("Pinned Notes")
-                        .append(Formatter.LS)
-                        .append(getNoteString(pinnedNotes))
-                        .append(Formatter.LS)
-                        .append("Unpinned Notes")
-                        .append(Formatter.LS)
-                        .append(getNoteString(unpinnedNotes));
-            } else if (pinnedNotes.isEmpty()) {
-                noteString = getSortedString(sortedNotes);
+            if (notes.isEmpty()) {
+                return Formatter.formatString(COMMAND_UNSUCCESSFUL_MESSAGE_EMPTY_NOTEBOOK);
+            }
+
+            return formatNotes(COMMAND_SUCCESSFUL_MESSAGE, notes);
+        }
+
+        if (notebook.checkPinned() && tags == null) {
+            if (!isSorted) {
+                pinned = notebook.getPinnedNotes();
+                unpinned = notebook.getUnpinnedNotes();
             } else {
-                pinnedNotesSorted = getSortedString(pinnedNotes);
-                unpinnedNotesSorted = getSortedString(unpinnedNotes);
-                noteString.append("Pinned Notes")
-                        .append(Formatter.LS)
-                        .append(pinnedNotesSorted)
-                        .append(Formatter.LS)
-                        .append("Unpinned Notes")
-                        .append(Formatter.LS)
-                        .append(unpinnedNotesSorted);
+                pinned = notebook.getSortedList(isAscendingOrder, true);
+                unpinned = notebook.getSortedList(isAscendingOrder, false);
             }
 
-            if (noteString.toString().isBlank()) {
-                return Formatter.LS + COMMAND_UNSUCCESSFUL_MESSAGE_EMPTY_NOTEBOOK;
-            }
-            return Formatter.LS + COMMAND_SUCCESSFUL_MESSAGE + noteString.toString();
+            return formatNotes(PINNED_MESSAGE, UNPINNED_MESSAGE, pinned, unpinned);
         }
 
         // Obtaining ArrayList<String> of tags and parsing it to get an ArrayList<Tag> of tags
@@ -154,22 +154,23 @@ public class ListNoteCommand extends Command {
             }
         }
 
-        // If the user inputted tags does not match any of the existing tags.
+        // Check if the user inputted tags match any of the existing tags.
         if (tagList.isEmpty()) {
-            return Formatter.LS + COMMAND_UNSUCCESSFUL_MESSAGE_INVALID_TAG;
+            return Formatter.formatString(COMMAND_UNSUCCESSFUL_MESSAGE_INVALID_TAG);
         }
 
-        // Based on user inputted tags, will store the respective values in an ArrayList
-        // E.g. if user input 2 tags, CS2113 and important, will have 2 ArrayList
+        // Based on user inputted tags, will store the respective values (notes) in an ArrayList
+        // E.g. if user input 2 tags, CS2113 and important, will have 2 ArrayList of notes
         //      1 for the values corresponding to CS2113 and the other for important tag
-        List<ArrayList<Note>> values = tagList.stream()
-                .map(tagMap::get)
-                .collect(Collectors.toList());
+        ArrayList<ArrayList<Note>> values = new ArrayList<>();
+        for (int i = 0; i < tagList.size(); i++) {
+            values.add(tagMap.get(tagList.get(i)));
+        }
 
+        // Account for note duplicates (multiple tags).
+        // For e.g. In case an item has both CS2113 and Important tag
         for (ArrayList<Note> value : values) {
             for (Note note : value) {
-                // Account for duplicates.
-                // In case an item has both CS2113 and Important tag
                 if (!notes.contains(note)) {
                     notes.add(note);
                 }
@@ -178,60 +179,29 @@ public class ListNoteCommand extends Command {
 
         // Checking for empty notes List
         if (notes.isEmpty()) {
-            return Formatter.LS + COMMAND_UNSUCCESSFUL_MESSAGE_INVALID_TAG;
+            return Formatter.formatString(COMMAND_UNSUCCESSFUL_MESSAGE_EMPTY_NOTEBOOK);
         }
 
-        // Sort the tagged notes
-        ArrayList<Note> sortedTaggedNotes = (ArrayList<Note>) notes.stream()
-                .filter(Objects::nonNull)
-                .sorted(Comparator.comparing(a -> a.getTitle().toLowerCase()))
-                .collect(Collectors.toList());
-
-        if (isAscendingOrder == null) {
-            noteString = getNoteString(notes);
-        } else {
-            noteString = getSortedString(sortedTaggedNotes);
-        }
-        return Formatter.LS + COMMAND_SUCCESSFUL_MESSAGE + noteString.toString();
-    }
-
-    /**
-     * Method compiles the ArrayList items and appends the items to a String.
-     * The ArrayList has already been sorted
-     * Method returns either top to bottom or bottom to top to account for ascending/descending sorting
-     *
-     * @param sortedNotes ArrayList of notes that were already sorted
-     * @return noteString String containing the notes sorted either ascending ot descending
-     */
-    public StringBuilder getSortedString(ArrayList<Note> sortedNotes) {
-        StringBuilder noteStrBuilder = new StringBuilder();
-
-        if (!isAscendingOrder) {
-            Collections.reverse(sortedNotes);
-            noteStrBuilder = getNoteString(sortedNotes);
-        } else if (isAscendingOrder) {
-            noteStrBuilder = getNoteString(sortedNotes);
-        }
-        return noteStrBuilder;
-    }
-
-    /**
-     * Method compiles the ArrayList items and appends the items to a String.
-     *
-     * @param notesList ArrayList of notes to obtain note title/tags from
-     * @return noteString StringBuilder containing the notes ready to be printed
-     */
-    public StringBuilder getNoteString(ArrayList<Note> notesList) {
-        StringBuilder noteString = new StringBuilder();
-
-        for (int i = 0; i < notesList.size(); i++) {
-            noteString.append(i + 1).append(SUFFIX_INDEX)
-                    .append(notesList.get(i).getTitle())
-                    .append(" ")
-                    .append(notesList.get(i).getTagsName())
-                    .append(Formatter.LS);
+        if (!notebook.checkPinned() && tags != null) {
+            if (isSorted) {
+                // Sort the tagged notes
+                ArrayList<Note> sortedTaggedNotes = new ArrayList<>();
+                notes = notebook.getSortedList(isAscendingOrder, null, sortedTaggedNotes);
+            }
+            return formatNotes(COMMAND_SUCCESSFUL_MESSAGE, notes);
         }
 
-        return noteString;
+        if (notebook.checkPinned() && tags != null) {
+            if (!isSorted) {
+                pinned = notebook.getPinnedNotes(notes);
+                unpinned = notebook.getUnpinnedNotes(notes);
+            } else {
+                pinned = notebook.getSortedList(isAscendingOrder, true, notes);
+                unpinned = notebook.getSortedList(isAscendingOrder, false, notes);
+            }
+            return formatNotes(PINNED_MESSAGE, UNPINNED_MESSAGE, pinned, unpinned);
+        }
+
+        return formatNotes(COMMAND_SUCCESSFUL_MESSAGE, notes);
     }
 }
